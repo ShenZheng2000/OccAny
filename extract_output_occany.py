@@ -1114,7 +1114,7 @@ if __name__ == '__main__':
                         frame_str = f"{scene_token_to_time_index[frame_token]:06d}"
             else:
                 raise ValueError(f"Unsupported dataset: {args.dataset}")
-            print("item_count", item_count)
+            if not args.silent: print("item_count", item_count)
             
             
             if item_count % args.vis_interval == 0 and args.vis_output_dir is not None:
@@ -1244,10 +1244,10 @@ if __name__ == '__main__':
                 dataset.n_classes, dataset.other_class, dataset.empty_class
             )
             render_voxel_pred_np = render_voxel_pred.cpu().numpy().astype(np.uint8)
-            print("Number of occupied voxels in render:", np.sum(render_voxel_pred_np != dataset.empty_class))
+            if not args.silent: print("Number of occupied voxels in render:", np.sum(render_voxel_pred_np != dataset.empty_class))
             
             voxel_predictions_dict[f"render_th{recon_conf_thres}"] = render_voxel_pred_np
-            print(f"Added render voxel prediction: render_th{recon_conf_thres}")
+            if not args.silent: print(f"Added render voxel prediction: render_th{recon_conf_thres}")
             
             # If render_gen exists, also create and save combined output
             if 'render_gen' in outputs:
@@ -1285,15 +1285,15 @@ if __name__ == '__main__':
                     dataset.n_classes, dataset.other_class, dataset.empty_class
                 )
                 voxel_pred_np = voxel_pred.cpu().numpy().astype(np.uint8)
-                print("Number of occupied voxels:", np.sum(voxel_pred_np != dataset.empty_class))
+                if not args.silent: print("Number of occupied voxels:", np.sum(voxel_pred_np != dataset.empty_class))
                 key = f"render_recon_gen_recon{recon_conf_thres}_gen{gen_conf_thres}"
                 voxel_predictions_dict[key] = voxel_pred_np
-                print(f"Added combined voxel prediction: {key}")
+                if not args.silent: print(f"Added combined voxel prediction: {key}")
            
             save_path = os.path.join(voxel_pred_save_dir, "voxel_predictions.pkl")
             with open(save_path, 'wb') as f:
                 pickle.dump(voxel_predictions_dict, f)
-            print(f"Saved voxel predictions dictionary: {save_path}")
+            if not args.silent: print(f"Saved voxel predictions dictionary: {save_path}")
         
             item_count += 1  # Increment item counter after processing each item in batch
             

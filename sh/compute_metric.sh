@@ -51,4 +51,5 @@ python compute_metrics_from_saved_voxels.py \
     --kitti_root "$kitti_root" \
     --nuscenes_root "$nuscenes_root" \
     ${exp_extra_args[$EXP_ID]} \
+    --world "${WORLD:-1}" --pid "${PID:-0}" \
     ${NO_MAJORITY_POOLING_ARG}

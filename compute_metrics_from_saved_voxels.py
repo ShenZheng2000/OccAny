@@ -70,6 +70,9 @@ def get_args_parser():
                         help='Only for separate pooling: apply geometry-only occupancy pooling')
     parser.add_argument('--no_majority_pooling', action='store_true', default=False,
                         help='Disable majority pooling even if --apply_majority_pooling is set (useful to override exp list defaults)')
+    parser.add_argument('--world', type=int, default=1,
+                        help='Evaluate only samples with index %% world == pid (must match inference sharding)')
+    parser.add_argument('--pid', type=int, default=0, help='Shard id used with --world')
     return parser
 
 
@@ -139,8 +142,8 @@ def main():
     dataset, collate_fn, recon_view_idx = prepare_metric_eval_setting(
         dataset=args.dataset,
         setting=args.setting,
-        process_id=0,
-        num_worlds=1,
+        process_id=args.pid,
+        num_worlds=args.world,
         split='val',
         kitti_root=args.kitti_root,
         nuscenes_root=args.nuscenes_root,

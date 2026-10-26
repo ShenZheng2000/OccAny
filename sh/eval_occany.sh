@@ -40,7 +40,6 @@ nuscenes_root="${NUSCENES_ROOT:-$PROJECT/data/nuscenes}"
 
 python extract_output_occany.py \
     --output_dir "$SCRATCH/ssc_voxel_pred" \
-    --vis_output_dir "$SCRATCH/ssc_output" \
     --kitti_root "$kitti_root" \
     --nuscenes_root "$nuscenes_root" \
     --model "$MODEL" \
