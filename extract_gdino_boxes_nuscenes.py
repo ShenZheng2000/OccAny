@@ -81,7 +81,7 @@ if __name__ == '__main__':
     if "TRG_WORK" in os.environ:
         raise ValueError("This script only works on karolina")
     else:
-        nuscenes_root = os.path.join(os.environ['PROJECT'], "data", "nuscenes")
+        nuscenes_root = os.environ.get("NUSCENES_ROOT", os.path.join(os.environ['PROJECT'], "data", "nuscenes"))
 
 
     dataset = NuScenesDataset(split="val",

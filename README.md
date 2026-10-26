@@ -83,7 +83,8 @@ python -m pip install --upgrade pip setuptools wheel ninja
 ```bash
 conda install -c nvidia cuda-toolkit=12.6
 pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu126
-pip install xformers==0.0.29.post2
+# pip install xformers==0.0.29.post2
+pip install xformers==0.0.29.post2 --no-deps --index-url https://download.pytorch.org/whl/cu126
 ```
 
 ### Install Python Dependencies
@@ -98,7 +99,8 @@ pip install -r requirements.txt
 export CUDA_HOME=$CONDA_PREFIX
 export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib:$LD_LIBRARY_PATH
-pip install torch-scatter --no-cache-dir --no-build-isolation
+# pip install torch-scatter --no-cache-dir --no-build-isolation
+pip install torch-scatter -f https://data.pyg.org/whl/torch-2.6.0+cu126.html
 ```
 
 ### Third-Party Code
@@ -183,6 +185,19 @@ cd OccAny
 python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='anhquancao/OccAny', repo_type='model', local_dir='.', allow_patterns='checkpoints/*')"
 ```
 
+Download SAM3 weights (gated on Hugging Face; run `hf auth login` first and request access to `facebook/sam3`):
+
+```bash
+hf download facebook/sam3 --local-dir checkpoints/sam3
+```
+
+Download the SAM3 tokenizer vocab (missing from the vendored `third_party/sam3`):
+
+```bash
+mkdir -p third_party/sam3/assets
+wget -O third_party/sam3/assets/bpe_simple_vocab_16e6.txt.gz https://github.com/openai/CLIP/raw/main/clip/bpe_simple_vocab_16e6.txt.gz
+```
+
 Expected files under `checkpoints/`:
 
 - `occany_plus_gen.pth`
@@ -192,6 +207,7 @@ Expected files under `checkpoints/`:
 - `occany_plus_recon_1B.pth`
 - `groundingdino_swinb_cogcoor.pth`
 - `sam2.1_hiera_large.pt`
+- `sam3/` (from `facebook/sam3`)
 
 ## 🚀 Quick Start
 
@@ -436,6 +452,12 @@ $PROJECT/data/nuscenes/
    ```
 
    If `groundingdino/_C` fails to load (for example, `NameError: name '_C' is not defined` in `ms_deform_attn.py`), rerun this step in your `occany` environment.
+
+   GroundingDINO needs `transformers<5` (v5 removed `BertModel.get_extended_attention_mask`, giving `AttributeError: BertModel is missing get_extended_attention_mask`):
+
+   ```bash
+   pip install "transformers<5"
+   ```
 
 4. Pre-extract the GroundingDINO boxes once:
 

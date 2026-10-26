@@ -283,7 +283,12 @@ class Sam3ModelManager:
         if self._sam3 is None:
             logging.info("Loading SAM3 image model...")
            
-            model = build_sam3_image_model(eval_mode=True)
+            # model = build_sam3_image_model(eval_mode=True)
+            model = build_sam3_image_model(
+                eval_mode=True,
+                checkpoint_path="checkpoints/sam3/sam3.pt",
+                load_from_HF=False,
+            )
             model.to(device)
             for param in model.parameters():
                 param.requires_grad_(False)
